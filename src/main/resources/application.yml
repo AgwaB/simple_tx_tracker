@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    test:
+      jdbc-url: jdbc:h2:mem:colletter
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+    generate-ddl: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+node:
+  mode: ropsten
+  ropsten:
+    url: https://ropsten.infura.io/v3/
+  ganache:
+    url: http://127.0.0.1
+    port: 8545
+
+tracker:
+  address: dE855e7bBd97b1aE3aBa872e62Cb4C555A709Fe9
+
+tx:
+  threadpool: 10
+
+server:
+  port: 8081
