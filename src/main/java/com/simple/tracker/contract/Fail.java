@@ -1,4 +1,4 @@
-package fail;
+package com.simple.tracker.contract;
 
 import java.math.BigInteger;
 import java.util.Arrays;

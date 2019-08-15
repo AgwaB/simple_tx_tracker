@@ -31,7 +31,10 @@ public class TxChannel {
         Disposable subscription = web3j.transactionFlowable().subscribe(tx -> {
             if (tx.getFrom().equals(initConfig.getAddress()) || tx.getTo().equals(initConfig.getAddress())) {
                 TransactionReceipt transactionReceipt = web3jUtil.getTransactionReceipt(tx.getHash(), POLLING_FREQUENCY, DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH).get();
-                TxLog.info("TRACE", "status", transactionReceipt.getStatus());
+                TxLog.info("TRACE",
+                        "status", transactionReceipt.getStatus(),
+                        "error", transactionReceipt.getLogs().toString()
+                        );
             }
         });
     }

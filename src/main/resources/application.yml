@@ -20,7 +20,7 @@ spring:
       path: /h2-console
 
 node:
-  mode: ganache
+  mode: ropsten
   ropsten:
     url: https://ropsten.infura.io/v3/
   ganache:

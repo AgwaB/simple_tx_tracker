@@ -6,6 +6,7 @@ import com.simple.tracker.app.TxEthService;
 import com.simple.tracker.app.retrofit.RequestUtil;
 import com.simple.tracker.app.retrofit.TxService;
 import com.simple.tracker.app.retrofit.value.Response;
+import com.simple.tracker.app.value.ContractFrom;
 import com.simple.tracker.app.value.TxForm;
 import com.simple.tracker.config.InitConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +58,42 @@ public class TxController {
     public void send(@RequestBody TxForm txForm) {
         Credentials credentials = credentialsService.getCredentialsByPrivKey(txForm.getFromPrivKey());
         try {
-            txEthService.sendTxWithNonce(credentials, txForm.getNonce(), txForm.getTo(), txForm.getValue());
+            txEthService.sendTxWithoutNonce(
+                    credentials,
+                    txForm.getTo(),
+                    txForm.getValue()
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @PostMapping("/contract")
-    public void callContract(@RequestBody TxForm txForm) {
-        Credentials credentials = credentialsService.getCredentialsByPrivKey(txForm.getFromPrivKey());
+    public void callContract(@RequestBody ContractFrom contractFrom) {
+        Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
         try {
-            txContractService.sendContract(credentials, "0x5cd8D525561B3A397CFD183f4B86eeD65f03Ef9D");
+            txContractService.sendContract(
+                    credentials,
+                    contractFrom.getContractAddress(),
+                    contractFrom.getGasPrice(),
+                    contractFrom.getGasLimit()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/contract2")
+    public void callContract2(@RequestBody ContractFrom contractFrom) {
+        Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
+        try {
+            txContractService.sendContract2(
+                    credentials,
+                    contractFrom.getContractBinary(),
+                    contractFrom.getContractAddress(),
+                    contractFrom.getGasPrice(),
+                    contractFrom.getGasLimit()
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }

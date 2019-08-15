@@ -10,8 +10,10 @@ import java.math.BigInteger;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TxForm {
+public class ContractFrom {
     String fromPrivKey;
-    String to;
-    long value;
+    String contractBinary;
+    String contractAddress;
+    String gasPrice;
+    String gasLimit;
 }

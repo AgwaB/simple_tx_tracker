@@ -12,7 +12,7 @@ public class TxLog {
             return;
         }
 
-        log.append("[" + logName + "]");
+        log.append("\n[" + logName + "]");
 
         // TODO : 홀수 일 때
         for(int i = 0 ; i < keyvals.length ; i+=2) {

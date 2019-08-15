@@ -43,9 +43,6 @@ import static com.simple.tracker.app.value.Web3jDefaultValue.*;
 public class TxEthService {
     Logger logger = LoggerFactory.getLogger("txLogger");
 
-    private static final BigInteger GAS_PRICE = BigInteger.valueOf(22_000_000_000L);
-    private static final BigInteger GAS_LIMIT = BigInteger.valueOf(4_300_000);
-
     @Autowired
     private Admin web3j;
     @Autowired
@@ -70,16 +67,16 @@ public class TxEthService {
 
         EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
         String transactionHash = ethSendTransaction.getTransactionHash();
-        logger.info("\n[TX]"
-                + "\nhash : " + transactionHash
-                + "\nstatus : " + TxStatus.PENDING
-        );
+        TxLog.info("TX", "hash", transactionHash, "status", TxStatus.PENDING.toString());
 
         TransactionReceipt transactionReceipt = web3jUtil.waitForTransactionReceipt(transactionHash);
-        logger.info("\n[TX]"
-                + "\nhash : " + transactionReceipt.getTransactionHash()
-                + "\nstatus : " + TxStatus.SUCCESS
-        );
+        if (transactionReceipt.getStatus().equals("0x1")) {
+            TxLog.info("TX", "hash", transactionHash, "status", TxStatus.SUCCESS.toString());
+        }
+
+        if (transactionReceipt.getStatus().equals("0x0")) {
+            TxLog.info("TX", "hash", transactionHash, "status", TxStatus.FAIL.toString());
+        }
     }
 
     @Async("txAsyncExecutor")
@@ -94,10 +91,7 @@ public class TxEthService {
 
         BigInteger gasPrice = transfer.requestCurrentGasPrice();
         TransactionReceipt transactionReceipt = createTransaction(transfer, to, value, gasPrice).send();
-        logger.info("\n[TX]"
-                + "\nhash : " + transactionReceipt.getTransactionHash()
-                + "\nstatus : " + TxStatus.PENDING
-        );
+        TxLog.info("TX", "hash", transactionReceipt.getTransactionHash(), "status", TxStatus.PENDING.toString());
         // now maybe pending
     }
 

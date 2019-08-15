@@ -35,7 +35,7 @@ public class Scheduler {
 
     @PostConstruct
     public void openChannel() {
-        txChannel.txSocket();
+//        txChannel.txSocket();
     }
 
     @Scheduled(fixedDelay = 10)
