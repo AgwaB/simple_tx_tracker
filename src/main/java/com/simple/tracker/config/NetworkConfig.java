@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
 
 import javax.annotation.PostConstruct;
@@ -34,14 +35,14 @@ public class NetworkConfig {
     }
 
     @Bean
-    public Web3j web3j() {
+    public Admin web3j() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
 //                .addInterceptor(interceptor)
                 .build();
         HttpService httpService = new HttpService(host, client, true);
-        return Web3j.build(httpService);
+        return Admin.build(httpService);
     }
 
 
