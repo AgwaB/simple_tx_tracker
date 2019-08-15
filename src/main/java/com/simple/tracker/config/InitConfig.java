@@ -21,6 +21,10 @@ public class InitConfig {
     private String etherscanKey;
     @Value("${tracker.address}")
     private String address;
+    @Value("${tx.thread-pool}")
+    private int txThreadPoolSize;
+    @Value("${tx.queue-size}")
+    private int txQueueSize;
 
     public String getAddress() {
         return "0x" + this.address.toLowerCase();

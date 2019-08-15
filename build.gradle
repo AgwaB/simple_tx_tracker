@@ -38,4 +38,7 @@ dependencies {
     compile('com.squareup.retrofit2:retrofit:2.3.0')
     compile('com.squareup.retrofit2:converter-gson:2.3.0')
     compile('com.squareup.okhttp3:logging-interceptor:3.9.0')
+
+    // log
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }

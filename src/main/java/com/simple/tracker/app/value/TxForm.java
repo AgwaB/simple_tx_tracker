@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SendFrom {
-    String privateKey;
+public class TxForm {
+    String fromPrivKey;
     String to;
     long value;
 }

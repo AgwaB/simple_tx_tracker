@@ -1,7 +1,10 @@
 package com.simple.tracker.app;
 
+import com.simple.tracker.app.value.TxStatus;
 import com.simple.tracker.config.InitConfig;
 import io.reactivex.disposables.Disposable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,12 @@ import org.web3j.utils.Convert;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static org.web3j.tx.TransactionManager.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
+import java.util.concurrent.BlockingQueue;
 
 @Service
 public class TransactionService {
+    Logger logger = LoggerFactory.getLogger("txLogger");
+
     public static final int DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH = 40;
     private static final long POLLING_FREQUENCY = 15 * 1000;
 
@@ -47,7 +48,10 @@ public class TransactionService {
         try {
             BigInteger gasPrice = transfer.requestCurrentGasPrice();
             TransactionReceipt transactionReceipt = createTransaction(transfer, to, value, gasPrice).send();
-            System.out.println("Tx : " + transactionReceipt.getTransactionHash() + " is now pended");
+            logger.info("\n[TX]"
+                    + "\nhash : " + transactionReceipt.getTransactionHash()
+                    + "\nstatus : " + TxStatus.PENDING
+            );
             // now maybe pending
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +66,10 @@ public class TransactionService {
                 new Callback() {
                     @Override
                     public void accept(TransactionReceipt transactionReceipt) {
-                        System.out.println("Tx : " + transactionReceipt.getTransactionHash() + " is now accepted, status is " + transactionReceipt.getStatus());
+                        logger.info("\n[TX]"
+                                + "\nhash : " + transactionReceipt.getTransactionHash()
+                                + "\nstatus : " + TxStatus.SUCCESS
+                        );
                     }
 
                     @Override

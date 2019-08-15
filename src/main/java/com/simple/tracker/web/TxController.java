@@ -5,22 +5,24 @@ import com.simple.tracker.app.TransactionService;
 import com.simple.tracker.app.retrofit.RequestUtil;
 import com.simple.tracker.app.retrofit.TxService;
 import com.simple.tracker.app.retrofit.value.Response;
-import com.simple.tracker.app.value.SendFrom;
+import com.simple.tracker.app.value.TxForm;
 import com.simple.tracker.config.InitConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.web3j.crypto.Credentials;
 import retrofit2.Call;
+
+import java.util.concurrent.BlockingQueue;
 
 @RestController
 @RequestMapping("/tx")
 public class TxController {
     @Autowired
-    private TransactionService transactionService;
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
     private InitConfig initConfig;
+    @Autowired
+    @Qualifier("linkedBlockingQueue")
+    private BlockingQueue txQueue;
 
     @GetMapping()
     public Response test() {
@@ -39,9 +41,7 @@ public class TxController {
     }
 
     @PostMapping()
-    public void send(@RequestBody SendFrom sendFrom) {
-        // TreadPool 검사, 꽉 차면 Queue에 넣어서 관리
-        Credentials credentials = credentialsService.getCredentialsByPrivKey(sendFrom.getPrivateKey());
-        transactionService.sendTx(credentials, sendFrom.getTo(), sendFrom.getValue());
+    public void send(@RequestBody TxForm txForm) {
+        txQueue.add(txForm);
     }
 }
