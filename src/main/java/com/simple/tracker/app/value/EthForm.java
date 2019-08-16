@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TxForm {
+public class EthForm {
     String fromPrivKey;
     BigInteger nonce;
     String to;

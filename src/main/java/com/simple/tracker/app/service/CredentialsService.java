@@ -1,4 +1,4 @@
-package com.simple.tracker.app;
+package com.simple.tracker.app.service;
 
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;

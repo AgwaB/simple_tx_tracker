@@ -1,6 +1,6 @@
 package com.simple.tracker.config;
 
-import com.simple.tracker.app.value.TxForm;
+import com.simple.tracker.app.TxRequest;
 import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.app.value.TxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import static com.simple.tracker.app.value.Web3jDefaultValue.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
-import static com.simple.tracker.app.value.Web3jDefaultValue.POLLING_FREQUENCY;
+import static com.simple.tracker.app.value.DefaultValue.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
+import static com.simple.tracker.app.value.DefaultValue.POLLING_FREQUENCY;
 
 @Configuration
 public class QueueConfig {
@@ -26,12 +26,12 @@ public class QueueConfig {
     private Admin web3j;
 
     @Bean(name = "linkedBlockingQueue")
-    public BlockingQueue<TxForm> linkedBlockingQueue() {
+    public BlockingQueue<TxRequest> linkedBlockingQueue() {
         return new LinkedBlockingQueue(initConfig.getTxQueueSize());
     }
 
     @Bean(name = "priorityBlockingQueue")
-    public BlockingQueue<TxForm> priorityBlockingQueue() {
+    public BlockingQueue<TxRequest> priorityBlockingQueue() {
         return new PriorityBlockingQueue();
     }
 

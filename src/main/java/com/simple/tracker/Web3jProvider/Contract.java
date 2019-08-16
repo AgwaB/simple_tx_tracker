@@ -1,4 +1,4 @@
-package com.simple.tracker.contract;
+package com.simple.tracker.Web3jProvider;
 
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;

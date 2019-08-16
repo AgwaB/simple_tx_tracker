@@ -1,13 +1,14 @@
 package com.simple.tracker.web;
 
-import com.simple.tracker.app.CredentialsService;
-import com.simple.tracker.app.TxContractService;
-import com.simple.tracker.app.TxEthService;
+import com.simple.tracker.app.*;
 import com.simple.tracker.app.retrofit.RequestUtil;
 import com.simple.tracker.app.retrofit.TxService;
 import com.simple.tracker.app.retrofit.value.Response;
+import com.simple.tracker.app.service.CredentialsService;
+import com.simple.tracker.app.service.TxContractService;
+import com.simple.tracker.app.service.TxEthService;
 import com.simple.tracker.app.value.ContractFrom;
-import com.simple.tracker.app.value.TxForm;
+import com.simple.tracker.app.value.EthForm;
 import com.simple.tracker.config.InitConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +25,7 @@ public class TxController {
     private InitConfig initConfig;
     @Autowired
     @Qualifier("linkedBlockingQueue")
-    private BlockingQueue txQueue;
+    private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private TxEthService txEthService;
     @Autowired
@@ -48,57 +49,29 @@ public class TxController {
         return response;
     }
 
-    // TODO
-    @PostMapping()
-    public void sendWithoutNonce(@RequestBody TxForm txForm) {
-        txQueue.add(txForm);
-    }
-
-    @PostMapping("/nonce")
-    public void send(@RequestBody TxForm txForm) {
-        Credentials credentials = credentialsService.getCredentialsByPrivKey(txForm.getFromPrivKey());
-        try {
-            txEthService.sendTxWithoutNonce(
-                    credentials,
-//                    txForm.getNonce(),
-                    txForm.getTo(),
-                    txForm.getGasPrice(),
-                    txForm.getGasLimit(),
-                    txForm.getValue()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @PostMapping("/eth")
+    public void sendEther(@RequestBody EthForm ethForm) {
+        Credentials credentials = credentialsService.getCredentialsByPrivKey(ethForm.getFromPrivKey());
+        EthRequest ethRequest = new EthRequest(txEthService, ethForm, credentials);
+        txQueue.add(ethRequest);
     }
 
     @PostMapping("/contract")
     public void callContract(@RequestBody ContractFrom contractFrom) {
         Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
-        try {
-            txContractService.sendContract(
-                    credentials,
-                    contractFrom.getContractAddress(),
-                    contractFrom.getGasPrice(),
-                    contractFrom.getGasLimit()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @PostMapping("/contract2")
-    public void callContract2(@RequestBody ContractFrom contractFrom) {
-        Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
-        try {
-            txContractService.sendContract2(
-                    credentials,
-                    contractFrom.getContractBinary(),
-                    contractFrom.getContractAddress(),
-                    contractFrom.getGasPrice(),
-                    contractFrom.getGasLimit()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ContractRequest contractRequest = new ContractRequest(txContractService, contractFrom, credentials);
+        txQueue.add(contractRequest);
+//        Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
+//        try {
+//            txContractService.sendContract(
+//                    credentials,
+//                    contractFrom.getContractBinary(),
+//                    contractFrom.getContractAddress(),
+//                    contractFrom.getGasPrice(),
+//                    contractFrom.getGasLimit()
+//            );
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

@@ -1,25 +1,20 @@
 package com.simple.tracker.app.util;
 
-import com.simple.tracker.app.value.TxLog;
-import com.simple.tracker.app.value.TxStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.tx.response.Callback;
-import org.web3j.tx.response.QueuingTransactionReceiptProcessor;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
-import static com.simple.tracker.app.value.Web3jDefaultValue.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
-import static com.simple.tracker.app.value.Web3jDefaultValue.POLLING_FREQUENCY;
+import static com.simple.tracker.app.value.DefaultValue.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
+import static com.simple.tracker.app.value.DefaultValue.POLLING_FREQUENCY;
 
 @Component
 public class Web3jUtil {
