@@ -8,6 +8,7 @@ import io.reactivex.disposables.Disposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
@@ -23,6 +24,7 @@ import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.ChainId;
 import org.web3j.tx.FastRawTransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.response.Callback;
@@ -49,15 +51,18 @@ public class TxEthService {
     private Web3jUtil web3jUtil;
     @Autowired
     private InitConfig initConfig;
+    @Autowired
+    @Qualifier("QueuingTxReceipt")
+    private QueuingTransactionReceiptProcessor queuingTransactionReceiptProcessor;
 
     @Async("txAsyncExecutor")
-    public void sendTxWithNonce(Credentials from, BigInteger nonce, String to, long value) throws Exception {
-//        BigInteger nonce = getNonce(from.getAddress());
-        BigInteger wei = Convert.toWei(Long.toString(value), Convert.Unit.ETHER).toBigInteger();
+    public void sendTxWithNonce(Credentials from, String to, String gasPrice, String gasLimit, long value) throws Exception {
+        BigInteger nonce = web3jUtil.getNonce(from.getAddress());
+        BigInteger wei = Convert.toWei(Long.toString(value), Convert.Unit.WEI).toBigInteger();
         RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                 nonce,
-                GAS_PRICE,
-                GAS_LIMIT,
+                new BigInteger(gasPrice),
+                new BigInteger(gasLimit),
                 to,
                 wei
         );
@@ -79,50 +84,34 @@ public class TxEthService {
         }
     }
 
-    @Async("txAsyncExecutor")
-    public void sendTxWithoutNonce(Credentials from, String to, long value) throws Exception {
+    public void sendTxWithoutNonce(Credentials from, String to, String gasPrice, String gasLimit, long value) throws Exception {
         FastRawTransactionManager transactionManager = new FastRawTransactionManager(
                 web3j,
                 from,
-                getQueuingTransactionReceiptProcessor()
+                queuingTransactionReceiptProcessor
         );
 
         Transfer transfer = new Transfer(web3j, transactionManager);
 
-        BigInteger gasPrice = transfer.requestCurrentGasPrice();
-        TransactionReceipt transactionReceipt = createTransaction(transfer, to, value, gasPrice).send();
+        TransactionReceipt transactionReceipt = createTransaction(
+                transfer,
+                to,
+                value,
+                new BigInteger(gasPrice),
+                new BigInteger(gasLimit)
+        ).send();
         TxLog.info("TX", "hash", transactionReceipt.getTransactionHash(), "status", TxStatus.PENDING.toString());
         // now maybe pending
     }
 
-    private QueuingTransactionReceiptProcessor getQueuingTransactionReceiptProcessor() {
-        return new QueuingTransactionReceiptProcessor(
-                web3j,
-                new Callback() {
-                    @Override
-                    public void accept(TransactionReceipt transactionReceipt) {
-                        logger.info("\n[TX]"
-                                + "\nhash : " + transactionReceipt.getTransactionHash()
-                                + "\nstatus : " + TxStatus.SUCCESS
-                        );
-                    }
-
-                    @Override
-                    public void exception(Exception exception) {
-                    }
-                },
-                DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH,
-                POLLING_FREQUENCY);
-    }
-
     private RemoteCall<TransactionReceipt> createTransaction(
-            Transfer transfer, String to, long value, BigInteger gasPrice) {
+            Transfer transfer, String to, long value, BigInteger gasPrice, BigInteger gasLimit) {
         return transfer.sendFunds(
                 to,
                 BigDecimal.valueOf(value),
                 Convert.Unit.WEI,
                 gasPrice,
-                Transfer.GAS_LIMIT);
+                gasLimit);
     }
 
     boolean unlockAccount(String from, String password) throws Exception {

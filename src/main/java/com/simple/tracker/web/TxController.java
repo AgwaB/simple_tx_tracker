@@ -60,7 +60,10 @@ public class TxController {
         try {
             txEthService.sendTxWithoutNonce(
                     credentials,
+//                    txForm.getNonce(),
                     txForm.getTo(),
+                    txForm.getGasPrice(),
+                    txForm.getGasLimit(),
                     txForm.getValue()
             );
         } catch (Exception e) {

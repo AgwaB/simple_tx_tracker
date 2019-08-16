@@ -61,6 +61,7 @@ public class QueueConfig {
 
                     @Override
                     public void exception(Exception exception) {
+                        TxLog.error(exception.getMessage());
                     }
                 },
                 DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH,

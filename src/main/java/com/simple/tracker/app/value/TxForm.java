@@ -12,6 +12,9 @@ import java.math.BigInteger;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TxForm {
     String fromPrivKey;
+    BigInteger nonce;
     String to;
+    String gasPrice;
+    String gasLimit;
     long value;
 }

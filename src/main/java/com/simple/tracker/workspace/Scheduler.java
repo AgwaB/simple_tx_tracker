@@ -38,13 +38,13 @@ public class Scheduler {
 //        txChannel.txSocket();
     }
 
-    @Scheduled(fixedDelay = 10)
+//    @Scheduled(fixedDelay = 10)
     public void run() {
         try {
             if (asyncManager.isBtcAvailable()) {
                 TxForm txForm = (TxForm) txQueue.take();
                 Credentials credentials = credentialsService.getCredentialsByPrivKey(txForm.getFromPrivKey());
-                txEthService.sendTxWithoutNonce(credentials, txForm.getTo(), txForm.getValue());
+                txEthService.sendTxWithoutNonce(credentials, txForm.getTo(), txForm.getGasPrice(), txForm.getGasLimit(), txForm.getValue());
                 TxLog.info("TX REQUEST",
                         "from", credentials.getAddress(),
                         "to", txForm.getTo(),

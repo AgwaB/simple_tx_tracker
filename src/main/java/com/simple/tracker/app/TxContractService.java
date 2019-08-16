@@ -74,7 +74,7 @@ public class TxContractService {
     }
 
     @Async("txAsyncExecutor")
-    public void sendContract2(Credentials from, String contractBinary, String contractAddress, String gasPrice, String gasLimit) throws Exception {
+    public synchronized void sendContract2(Credentials from, String contractBinary, String contractAddress, String gasPrice, String gasLimit) throws Exception {
         FastRawTransactionManager transactionManager = new FastRawTransactionManager(
                 web3j,
                 from,

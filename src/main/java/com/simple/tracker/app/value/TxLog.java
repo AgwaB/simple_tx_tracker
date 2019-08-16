@@ -24,4 +24,8 @@ public class TxLog {
 
         logger.info(log.toString());
     }
+
+    public static void error(String error) {
+         logger.error("\n" +error);
+    }
 }
