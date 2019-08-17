@@ -6,6 +6,7 @@ import com.simple.tracker.app.value.TxStatus;
 import com.simple.tracker.config.InitConfig;
 import com.simple.tracker.Web3jProvider.Contract;
 import com.simple.tracker.Web3jProvider.ContractGasProvider;
+import com.simple.tracker.domain.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,12 @@ import java.math.BigInteger;
 
 @Service
 public class TxContractService {
-    Logger logger = LoggerFactory.getLogger("txLogger");
-
     @Autowired
     private Admin web3j;
     @Autowired
-    private Web3jUtil web3jUtil;
+    private TxService txService;
     @Autowired
-    private InitConfig initConfig;
-    @Autowired
-    @Qualifier("QueuingTxReceipt")
+    @Qualifier("queuingTxReceipt")
     private QueuingTransactionReceiptProcessor queuingTransactionReceiptProcessor;
 
     @Async("txAsyncExecutor")
@@ -55,9 +52,15 @@ public class TxContractService {
 
         TransactionReceipt transactionReceipt
                 = contract.performTransaction(new Address(contractAddress), "f", Uint256.DEFAULT).send();
-        TxLog.info("TX",
-                "hash", transactionReceipt.getTransactionHash(),
-                "status", TxStatus.PENDING.toString()
+
+        txService.processTx(
+                Transaction.builder()
+                        .txId(transactionReceipt.getTransactionHash())
+                        .isContract(true)
+                        .txStatus(TxStatus.PENDING)
+                        .from(from.getAddress())
+                        .to(contractAddress)
+                        .build()
         );
     }
 }

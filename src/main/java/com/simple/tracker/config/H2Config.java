@@ -13,7 +13,7 @@ import java.sql.SQLException;
 @Configuration
 public class H2Config {
     @Bean
-    @ConfigurationProperties("spring.datasource.test")
+    @ConfigurationProperties("spring.datasource.tracker")
     public DataSource dataSource() throws SQLException {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }

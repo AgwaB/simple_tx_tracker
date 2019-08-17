@@ -6,6 +6,7 @@ import com.simple.tracker.app.util.Web3jUtil;
 import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.app.value.TxStatus;
 import com.simple.tracker.config.InitConfig;
+import com.simple.tracker.domain.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,9 @@ public class TxEthService {
     @Autowired
     private Admin web3j;
     @Autowired
-    private Web3jUtil web3jUtil;
+    private TxService txService;
     @Autowired
-    private InitConfig initConfig;
-    @Autowired
-    @Qualifier("QueuingTxReceipt")
+    @Qualifier("queuingTxReceipt")
     private QueuingTransactionReceiptProcessor queuingTransactionReceiptProcessor;
 
     // TODO : exception chaing to Scheduler.class ?
@@ -58,9 +57,16 @@ public class TxEthService {
                 new BigInteger(gasPrice),
                 new BigInteger(gasLimit)
         ).send();
-        TxLog.info("TX",
-                "hash", transactionReceipt.getTransactionHash(),
-                "status", TxStatus.PENDING.toString()
+
+        txService.processTx(
+                Transaction.builder()
+                        .txId(transactionReceipt.getTransactionHash())
+                        .isContract(false)
+                        .txStatus(TxStatus.PENDING)
+                        .from(from.getAddress())
+                        .to(to)
+                        .value(BigInteger.valueOf(value))
+                        .build()
         );
     }
 
@@ -81,10 +87,18 @@ public class TxEthService {
                 new BigInteger(gasPrice),
                 new BigInteger(gasLimit)
         ).send();
-        TxLog.info("TX",
-                "hash", transactionReceipt.getTransactionHash(),
-                "status", TxStatus.PENDING.toString()
+
+        txService.processTx(
+                Transaction.builder()
+                        .txId(transactionReceipt.getTransactionHash())
+                        .isContract(false)
+                        .txStatus(TxStatus.PENDING)
+                        .from(from.getAddress())
+                        .to(to)
+                        .value(BigInteger.valueOf(value))
+                        .build()
         );
+
         // now maybe pending
     }
 
@@ -106,5 +120,9 @@ public class TxEthService {
                 Convert.Unit.WEI,
                 gasPrice,
                 gasLimit);
+    }
+
+    private void processTx() {
+
     }
 }

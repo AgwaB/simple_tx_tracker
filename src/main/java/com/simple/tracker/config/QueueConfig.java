@@ -1,6 +1,7 @@
 package com.simple.tracker.config;
 
 import com.simple.tracker.app.TxRequest;
+import com.simple.tracker.app.value.PendingTx;
 import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.app.value.TxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,49 +23,14 @@ import static com.simple.tracker.app.value.DefaultValue.POLLING_FREQUENCY;
 public class QueueConfig {
     @Autowired
     private InitConfig initConfig;
-    @Autowired
-    private Admin web3j;
 
-    @Bean(name = "linkedBlockingQueue")
-    public BlockingQueue<TxRequest> linkedBlockingQueue() {
+    @Bean(name = "txQueue")
+    public BlockingQueue<TxRequest> txQueue() {
         return new LinkedBlockingQueue(initConfig.getTxQueueSize());
     }
 
-    @Bean(name = "priorityBlockingQueue")
-    public BlockingQueue<TxRequest> priorityBlockingQueue() {
-        return new PriorityBlockingQueue();
-    }
-
-    @Bean(name = "QueuingTxReceipt")
-    public QueuingTransactionReceiptProcessor getQueuingTransactionReceiptProcessor() {
-        return new QueuingTransactionReceiptProcessor(
-                web3j,
-                new Callback() {
-                    @Override
-                    public void accept(TransactionReceipt transactionReceipt) {
-                        if (transactionReceipt.getStatus().equals("0x1")) {
-                            TxLog.info(
-                                    "TX",
-                                    "hash", transactionReceipt.getTransactionHash(),
-                                    "status", TxStatus.SUCCESS.toString()
-                            );
-                        }
-
-                        if (transactionReceipt.getStatus().equals("0x0")) {
-                            TxLog.info(
-                                    "TX",
-                                    "hash", transactionReceipt.getTransactionHash(),
-                                    "status", TxStatus.FAIL.toString()
-                            );
-                        }
-                    }
-
-                    @Override
-                    public void exception(Exception exception) {
-                        TxLog.error(exception.getMessage());
-                    }
-                },
-                DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH,
-                POLLING_FREQUENCY);
+    @Bean(name = "pendingQueue")
+    public BlockingQueue<PendingTx> pendingQueue() {
+        return new LinkedBlockingQueue(initConfig.getTxQueueSize());
     }
 }

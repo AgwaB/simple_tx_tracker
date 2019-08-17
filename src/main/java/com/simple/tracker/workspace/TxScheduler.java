@@ -17,23 +17,15 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 @Component
-public class Scheduler {
-    Logger logger = LoggerFactory.getLogger("txLogger");
+public class TxScheduler {
     private static final int BREAK_TIME = 1 * 500;
     @Autowired
     @Qualifier("txQueue")
     private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private AsyncManager asyncManager;
-    @Autowired
-    private TxChannel txChannel;
 
     private int sequence = 0;
-
-    @PostConstruct
-    public void openChannel() {
-//        txChannel.txSocket();
-    }
 
     @Scheduled(fixedDelay = 10)
     public void run() {

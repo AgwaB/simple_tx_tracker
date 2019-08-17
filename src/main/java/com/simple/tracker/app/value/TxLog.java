@@ -25,7 +25,18 @@ public class TxLog {
         logger.info(log.toString());
     }
 
+    public static void error(String error, String handleMessage) {
+        StringBuffer log = new StringBuffer();
+
+        log.append("\n" + error);
+        log.append("\n" +"handling : " + handleMessage);
+
+         logger.error(log.toString());
+
+    }
+
     public static void error(String error) {
-         logger.error("\n" +error);
+        logger.error(error);
+
     }
 }

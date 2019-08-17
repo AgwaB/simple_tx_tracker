@@ -24,7 +24,7 @@ public class TxController {
     @Autowired
     private InitConfig initConfig;
     @Autowired
-    @Qualifier("linkedBlockingQueue")
+    @Qualifier("txQueue")
     private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private TxEthService txEthService;
@@ -61,17 +61,5 @@ public class TxController {
         Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
         ContractRequest contractRequest = new ContractRequest(txContractService, contractFrom, credentials);
         txQueue.add(contractRequest);
-//        Credentials credentials = credentialsService.getCredentialsByPrivKey(contractFrom.getFromPrivKey());
-//        try {
-//            txContractService.sendContract(
-//                    credentials,
-//                    contractFrom.getContractBinary(),
-//                    contractFrom.getContractAddress(),
-//                    contractFrom.getGasPrice(),
-//                    contractFrom.getGasLimit()
-//            );
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }
