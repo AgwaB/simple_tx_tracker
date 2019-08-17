@@ -3,6 +3,7 @@ package com.simple.tracker.workspace;
 import com.simple.tracker.app.service.CredentialsService;
 import com.simple.tracker.app.service.TxEthService;
 import com.simple.tracker.app.TxRequest;
+import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.config.AsyncManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +19,16 @@ import java.util.concurrent.BlockingQueue;
 @Component
 public class Scheduler {
     Logger logger = LoggerFactory.getLogger("txLogger");
-    private static final int BREAK_TIME = 5 * 1000;
+    private static final int BREAK_TIME = 1 * 500;
     @Autowired
-    @Qualifier("linkedBlockingQueue")
+    @Qualifier("txQueue")
     private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private AsyncManager asyncManager;
     @Autowired
-    private TxEthService txEthService;
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
     private TxChannel txChannel;
+
+    private int sequence = 0;
 
     @PostConstruct
     public void openChannel() {
@@ -41,6 +40,12 @@ public class Scheduler {
         try {
             if (asyncManager.isBtcAvailable()) {
                 TxRequest txRequest = txQueue.take();
+
+                sequence++;
+                TxLog.info("REQUEST",
+                        "sequence", Integer.toString(sequence)
+                );
+
                 txRequest.execute();
             } else {
                 Thread.sleep(BREAK_TIME);
