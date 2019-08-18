@@ -1,9 +1,7 @@
 package com.simple.tracker.config;
 
 import com.simple.tracker.app.TxRequest;
-import com.simple.tracker.app.tx.PendingTx;
-import com.simple.tracker.app.tx.SentTx;
-import com.simple.tracker.app.tx.UnconfirmedTx;
+import com.simple.tracker.app.UnconfirmedTx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +19,8 @@ public class QueueConfig {
         return new LinkedBlockingQueue(initConfig.getTxQueueSize());
     }
 
-    @Bean(name = "sentTxQueue")
-    public BlockingQueue<SentTx> sentTxQueue() {
-        return new LinkedBlockingQueue(initConfig.getTxQueueSize());
-    }
-
-    @Bean(name = "pendingTxQueue")
-    public BlockingQueue<PendingTx> pendingTxQueue() {
+    @Bean(name = "unconfirmedTxQueue")
+    public BlockingQueue<UnconfirmedTx> unconfirmedTxQueue() {
         return new LinkedBlockingQueue(initConfig.getTxQueueSize());
     }
 }

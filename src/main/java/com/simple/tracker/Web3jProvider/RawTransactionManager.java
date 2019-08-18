@@ -30,15 +30,6 @@ public class RawTransactionManager extends TransactionManager {
 
     protected TxHashVerifier txHashVerifier = new TxHashVerifier();
 
-    public RawTransactionManager(Web3j web3j, Credentials credentials, long chainId) {
-        super(web3j, credentials.getAddress());
-
-        this.web3j = web3j;
-        this.credentials = credentials;
-
-        this.chainId = chainId;
-    }
-
     public RawTransactionManager(
             Web3j web3j,
             Credentials credentials,
@@ -50,16 +41,6 @@ public class RawTransactionManager extends TransactionManager {
         this.credentials = credentials;
         this.chainId = ChainId.NONE;
         this.nonce = nonce;
-    }
-
-    public RawTransactionManager(
-            Web3j web3j, Credentials credentials, long chainId, int attempts, long sleepDuration) {
-        super(web3j, attempts, sleepDuration, credentials.getAddress());
-
-        this.web3j = web3j;
-        this.credentials = credentials;
-
-        this.chainId = chainId;
     }
 
     @Override

@@ -25,19 +25,12 @@ public class EthRequest implements TxRequest {
         if (ethForm.getNonce().intValue() < 0) {
             txEthService.sendTxWithoutNonce(
                     from,
-                    ethForm.getTo(),
-                    ethForm.getGasPrice(),
-                    ethForm.getGasLimit(),
-                    ethForm.getValue()
+                    ethForm
             );
         } else {
             txEthService.sendTxWithNonce(
                     from,
-                    ethForm.getNonce(),
-                    ethForm.getTo(),
-                    ethForm.getGasPrice(),
-                    ethForm.getGasLimit(),
-                    ethForm.getValue()
+                    ethForm
             );
         }
     }
