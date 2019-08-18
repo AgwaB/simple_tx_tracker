@@ -12,6 +12,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.simple.tracker.app.value.DefaultValue.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH;
 import static com.simple.tracker.app.value.DefaultValue.POLLING_FREQUENCY;
@@ -52,7 +53,7 @@ public class Web3jUtil {
         return receiptOptional;
     }
 
-    public BigInteger getNonce(String address) throws Exception {
+    public BigInteger getNonce(String address) throws ExecutionException, InterruptedException {
         EthGetTransactionCount ethGetTransactionCount =
                 web3j.ethGetTransactionCount(address, DefaultBlockParameterName.LATEST)
                         .sendAsync()
@@ -61,7 +62,7 @@ public class Web3jUtil {
         return ethGetTransactionCount.getTransactionCount();
     }
 
-    private Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
+    public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
             throws Exception {
         EthGetTransactionReceipt transactionReceipt =
                 web3j.ethGetTransactionReceipt(transactionHash).sendAsync().get();

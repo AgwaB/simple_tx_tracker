@@ -25,6 +25,8 @@ public class Transaction {
     private TxStatus txStatus;
     @Column(name = "blockNumber")
     private BigInteger blockNumber;
+    @Column(name = "nonce")
+    private BigInteger nonce;
     @Column(name = "fromAddress")
     private String from;
     @Column(name = "toAddress")

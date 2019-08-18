@@ -121,8 +121,4 @@ public class TxEthService {
                 gasPrice,
                 gasLimit);
     }
-
-    private void processTx() {
-
-    }
 }

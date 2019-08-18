@@ -1,18 +1,13 @@
 package com.simple.tracker.workspace;
 
-import com.simple.tracker.app.service.CredentialsService;
-import com.simple.tracker.app.service.TxEthService;
 import com.simple.tracker.app.TxRequest;
 import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.config.AsyncManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
@@ -20,7 +15,7 @@ import java.util.concurrent.BlockingQueue;
 public class TxScheduler {
     private static final int BREAK_TIME = 1 * 500;
     @Autowired
-    @Qualifier("txQueue")
+    @Qualifier("requestTxQueue")
     private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private AsyncManager asyncManager;

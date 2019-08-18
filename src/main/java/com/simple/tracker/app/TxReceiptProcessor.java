@@ -1,10 +1,15 @@
 package com.simple.tracker.app;
 
+import com.simple.tracker.app.tx.PendingTx;
 import com.simple.tracker.app.service.TxService;
-import com.simple.tracker.app.value.PendingTx;
+import com.simple.tracker.app.tx.SentTx;
+import com.simple.tracker.app.tx.UnconfirmedTx;
 import com.simple.tracker.app.value.TxLog;
 import com.simple.tracker.app.value.TxStatus;
+import com.simple.tracker.domain.Transaction;
+import com.simple.tracker.domain.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.admin.Admin;
@@ -25,7 +30,8 @@ public class TxReceiptProcessor {
     @Autowired
     private TxService txService;
     @Autowired
-    private BlockingQueue<PendingTx> pendingQueue;
+    @Qualifier("sentTxQueue")
+    private BlockingQueue<SentTx> sentTxQueue;
 
     @Bean(name = "queuingTxReceipt")
     public QueuingTransactionReceiptProcessor getQueuingTransactionReceiptProcessor() {
@@ -55,8 +61,9 @@ public class TxReceiptProcessor {
                             throw exception;
                         } catch (TransactionException e) {
                             TxLog.error(exception.getMessage(), "send to pending transaction pool");
-                            pendingQueue.add(
-                                    new PendingTx(e.getTransactionHash().get())
+                            Transaction tx = txService.findByTxId(e.getTransactionHash().get());
+                            sentTxQueue.add(
+                                    new SentTx(tx.getTxId(), tx.getFrom(), tx.getNonce())
                             );
                             return;
                         } catch (Exception e) {

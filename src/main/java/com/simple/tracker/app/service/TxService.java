@@ -30,4 +30,8 @@ public class TxService {
                 "status", tx.getTxStatus().toString()
                 );
     }
+
+    public Transaction findByTxId(String txId) {
+        return transactionRepository.findById(txId).orElseThrow(() -> new InvalidValueException("Invalid txId : " + txId));
+    }
 }

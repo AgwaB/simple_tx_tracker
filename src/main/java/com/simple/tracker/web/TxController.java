@@ -24,7 +24,7 @@ public class TxController {
     @Autowired
     private InitConfig initConfig;
     @Autowired
-    @Qualifier("txQueue")
+    @Qualifier("requestTxQueue")
     private BlockingQueue<TxRequest> txQueue;
     @Autowired
     private TxEthService txEthService;

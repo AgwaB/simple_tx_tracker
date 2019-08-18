@@ -20,7 +20,7 @@ spring:
       path: /h2-console
 
 node:
-  mode: ganache
+  mode: ropsten
   ropsten:
     url: https://ropsten.infura.io/v3/
   ganache:
@@ -31,8 +31,8 @@ tracker:
   address: dE855e7bBd97b1aE3aBa872e62Cb4C555A709Fe9
 
 tx:
-  queue-size: 10
-  thread-pool: 20
+  queue-size: 10000
+  thread-pool: 24
 
 server:
   port: 8081
