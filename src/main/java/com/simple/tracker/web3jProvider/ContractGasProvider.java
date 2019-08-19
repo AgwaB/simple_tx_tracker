@@ -1,4 +1,4 @@
-package com.simple.tracker.Web3jProvider;
+package com.simple.tracker.web3jProvider;
 
 import java.math.BigInteger;
 

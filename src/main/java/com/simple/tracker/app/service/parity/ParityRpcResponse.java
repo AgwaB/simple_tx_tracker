@@ -1,8 +1,6 @@
-package com.simple.tracker.app.parity;
+package com.simple.tracker.app.service.parity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class ParityRpcResponse {

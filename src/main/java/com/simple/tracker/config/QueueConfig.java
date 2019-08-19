@@ -1,7 +1,7 @@
 package com.simple.tracker.config;
 
 import com.simple.tracker.app.TxRequest;
-import com.simple.tracker.app.UnconfirmedTx;
+import com.simple.tracker.app.value.UnconfirmedTx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

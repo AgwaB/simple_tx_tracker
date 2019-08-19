@@ -1,11 +1,9 @@
 package com.simple.tracker.app.service;
 
-import com.simple.tracker.Web3jProvider.RawTransactionManager;
+import com.simple.tracker.web3jProvider.RawTransactionManager;
 import com.simple.tracker.app.value.EthForm;
 import com.simple.tracker.app.value.TxStatus;
 import com.simple.tracker.domain.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;

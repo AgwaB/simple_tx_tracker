@@ -1,8 +1,9 @@
-package com.simple.tracker.app;
+package com.simple.tracker.web3jProvider;
 
 import com.simple.tracker.app.service.TxService;
-import com.simple.tracker.app.value.TxLog;
+import com.simple.tracker.app.log.TxLog;
 import com.simple.tracker.app.value.TxStatus;
+import com.simple.tracker.app.value.UnconfirmedTx;
 import com.simple.tracker.domain.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,7 +1,7 @@
-package com.simple.tracker.app.parity;
+package com.simple.tracker.app.service.parity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simple.tracker.app.PendingTx;
+import com.simple.tracker.app.value.PendingTx;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

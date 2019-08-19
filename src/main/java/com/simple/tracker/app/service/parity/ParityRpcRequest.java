@@ -1,10 +1,8 @@
-package com.simple.tracker.app.parity;
+package com.simple.tracker.app.service.parity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;

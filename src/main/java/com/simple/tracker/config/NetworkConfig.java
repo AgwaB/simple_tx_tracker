@@ -1,10 +1,8 @@
 package com.simple.tracker.config;
 
-import com.simple.tracker.app.parity.ParityService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +11,6 @@ import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
 
 @Configuration
 public class NetworkConfig {

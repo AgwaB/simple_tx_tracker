@@ -1,11 +1,10 @@
 package com.simple.tracker;
 
-import com.simple.tracker.app.UnconfirmedTx;
-import com.simple.tracker.app.parity.ParityService;
+import com.simple.tracker.app.value.UnconfirmedTx;
+import com.simple.tracker.app.service.parity.ParityService;
 import com.simple.tracker.app.service.TxService;
-import com.simple.tracker.app.util.Web3jUtil;
 import com.simple.tracker.app.value.TxStatus;
-import com.simple.tracker.workspace.UnconfirmedTxScheduler;
+import com.simple.tracker.scheduler.UnconfirmedTxScheduler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.BlockingQueue;
 

@@ -1,20 +1,14 @@
-package com.simple.tracker.workspace;
+package com.simple.tracker.scheduler;
 
-import com.simple.tracker.app.UnconfirmedTx;
-import com.simple.tracker.app.parity.ParityService;
+import com.simple.tracker.app.value.UnconfirmedTx;
+import com.simple.tracker.app.service.parity.ParityService;
 import com.simple.tracker.app.service.TxService;
-import com.simple.tracker.app.util.Web3jUtil;
-import com.simple.tracker.app.value.TxLog;
+import com.simple.tracker.app.log.TxLog;
 import com.simple.tracker.app.value.TxStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;

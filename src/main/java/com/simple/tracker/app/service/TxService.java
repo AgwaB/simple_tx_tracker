@@ -1,8 +1,8 @@
 package com.simple.tracker.app.service;
 
-import com.simple.tracker.app.UnconfirmedTx;
-import com.simple.tracker.app.util.Web3jUtil;
-import com.simple.tracker.app.value.TxLog;
+import com.simple.tracker.web3jProvider.util.Web3jUtil;
+import com.simple.tracker.app.value.UnconfirmedTx;
+import com.simple.tracker.app.log.TxLog;
 import com.simple.tracker.app.value.TxStatus;
 import com.simple.tracker.domain.Transaction;
 import com.simple.tracker.domain.TransactionRepository;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 

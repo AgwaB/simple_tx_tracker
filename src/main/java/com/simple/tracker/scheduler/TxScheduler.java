@@ -1,7 +1,7 @@
-package com.simple.tracker.workspace;
+package com.simple.tracker.scheduler;
 
 import com.simple.tracker.app.TxRequest;
-import com.simple.tracker.app.value.TxLog;
+import com.simple.tracker.app.log.TxLog;
 import com.simple.tracker.config.AsyncManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,4 +1,4 @@
-package com.simple.tracker.app.value;
+package com.simple.tracker.app.log;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
