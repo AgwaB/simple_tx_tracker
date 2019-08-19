@@ -40,6 +40,8 @@ dependencies {
     compile('com.squareup.retrofit2:converter-gson:2.3.0')
     compile('com.squareup.okhttp3:logging-interceptor:3.9.0')
 
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+
     // log
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }

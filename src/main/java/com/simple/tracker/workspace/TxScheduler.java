@@ -39,10 +39,13 @@ public class TxScheduler {
             }
         } catch (InterruptedException e) {
             // thread.sleep
+            TxLog.error(e.getMessage());
         } catch (IOException e) {
             // requestCurrentGasPrice
+            TxLog.error(e.getMessage());
         } catch (Exception e) {
             // send exception
+            TxLog.error(e.getMessage());
         }
     }
 }

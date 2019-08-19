@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -25,6 +27,20 @@ public class TxService {
     public void changeTxStatus(String txId, TxStatus txStatus) {
         Transaction tx = transactionRepository.findById(txId).orElseThrow(() -> new InvalidValueException("Invalid txId : " + txId));
         tx.changeStatus(txStatus);
+        transactionRepository.save(tx);
+        TxLog.info("TX",
+                "hash", tx.getTxId(),
+                "status", tx.getTxStatus().toString()
+        );
+    }
+
+    public void changeTxStatus(UnconfirmedTx unconfirmedTx, TxStatus txStatus) {
+        if(unconfirmedTx.getTxStatus() == txStatus) {
+            return;
+        }
+        Transaction tx = transactionRepository.findById(unconfirmedTx.getTxId()).orElseThrow(() -> new InvalidValueException("Invalid txId : " + unconfirmedTx.getTxId()));
+        tx.changeStatus(txStatus);
+        unconfirmedTx.changeTxStatus(txStatus);
         transactionRepository.save(tx);
         TxLog.info("TX",
                 "hash", tx.getTxId(),
@@ -53,7 +69,7 @@ public class TxService {
     }
 
     // pending if not unknown
-    public boolean checkIsUnknown(UnconfirmedTx tx, List<String> pendingList) {
+    public boolean checkIsUnknown(UnconfirmedTx tx, Set<String> pendingList) {
         if(!tx.isFirstChecked()) {
             return false;
         }
@@ -81,7 +97,7 @@ public class TxService {
         return TxStatus.FAIL;
     }
 
-    public boolean checkIsLost(UnconfirmedTx tx, List<String> pendingList) {
+    public boolean checkIsLost(UnconfirmedTx tx, Set<String> pendingList) {
         if(pendingList.contains(tx.getTxId())) {
             return false;
         }

@@ -58,6 +58,7 @@ public class TxContractService {
                         .txId(transactionReceipt.getTransactionHash())
                         .isContract(true)
                         .txStatus(TxStatus.PENDING)
+                        .nonce(BigInteger.valueOf(-1))
                         .from(from.getAddress())
                         .to(contractAddress)
                         .build()

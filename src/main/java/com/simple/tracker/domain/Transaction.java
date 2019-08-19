@@ -3,10 +3,7 @@ package com.simple.tracker.domain;
 import com.simple.tracker.app.value.TxStatus;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 @Entity
@@ -21,6 +18,7 @@ public class Transaction {
     private String txId;
     @Column(name = "isContract")
     private boolean isContract;
+    @Enumerated(EnumType.STRING)
     @Column(name = "txStatus")
     private TxStatus txStatus;
     @Column(name = "blockNumber")
@@ -33,8 +31,6 @@ public class Transaction {
     private String to;
     @Column(name = "value")
     private BigInteger value;
-    @Column(name = "data")
-    private String data;
 
     public void changeStatus(TxStatus txStatus) {
         this.txStatus = txStatus;

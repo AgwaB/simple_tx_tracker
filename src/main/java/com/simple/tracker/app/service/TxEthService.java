@@ -25,8 +25,6 @@ import java.math.BigInteger;
 
 @Service
 public class TxEthService {
-    Logger logger = LoggerFactory.getLogger("txLogger");
-
     @Autowired
     private Admin web3j;
     @Autowired
@@ -35,7 +33,7 @@ public class TxEthService {
     @Qualifier("queuingTxReceipt")
     private QueuingTransactionReceiptProcessor queuingTransactionReceiptProcessor;
 
-    // TODO : exception chaing to Scheduler.class ?
+    // TODO : exception chaining to Scheduler.class ?
     @Async("txAsyncExecutor")
     public synchronized void sendTxWithNonce(Credentials from, EthForm ethForm) throws Exception {
         RawTransactionManager rawTransactionManager =
@@ -60,16 +58,6 @@ public class TxEthService {
         processSend(transactionManager, from, ethForm);
     }
 
-    private RemoteCall<TransactionReceipt> createTransaction(
-            Transfer transfer, String to, long value, BigInteger gasPrice, BigInteger gasLimit) {
-        return transfer.sendFunds(
-                to,
-                BigDecimal.valueOf(value),
-                Convert.Unit.WEI,
-                gasPrice,
-                gasLimit);
-    }
-
     private void processSend(TransactionManager transactionManager, Credentials from, EthForm ethForm) throws Exception {
         Transfer transfer = new Transfer(web3j, transactionManager);
 
@@ -86,10 +74,21 @@ public class TxEthService {
                         .txId(transactionReceipt.getTransactionHash())
                         .isContract(false)
                         .txStatus(TxStatus.PENDING)
+                        .nonce(ethForm.getNonce())
                         .from(from.getAddress())
                         .to(ethForm.getTo())
                         .value(BigInteger.valueOf(ethForm.getValue()))
                         .build()
         );
+    }
+
+    private RemoteCall<TransactionReceipt> createTransaction(
+            Transfer transfer, String to, long value, BigInteger gasPrice, BigInteger gasLimit) {
+        return transfer.sendFunds(
+                to,
+                BigDecimal.valueOf(value),
+                Convert.Unit.WEI,
+                gasPrice,
+                gasLimit);
     }
 }

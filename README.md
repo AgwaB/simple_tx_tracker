@@ -9,30 +9,30 @@
 - ganache (local) 
 
 ## Transaction Status
-- SENT_CANCEL
+- SENT_CANCEL :
 send but canceled because same nonce (same as)  
-- SENT_UNKNOWN
+- SENT_UNKNOWN :
 send and not SENT_CANCEL and don't exist in txpool (maybe network failure or can be seen in txpool a lot later)
-- PENDING
+- PENDING :
 pending transaction in txpool  
-- SUCCESS
+- SUCCESS :
 success to send  
-- FAIL
+- FAIL :
 (the transaction which included in block) when there is not enough gas when run the contract or an exception occurs during execution  
-- LOST
+- LOST :
 tx entered txpool and exited with memory problem
 
 ## Structrue
 
 <p align="center">
-    	<img src="./img/simple_tx_tracker_structure.png" width="800" height="330"></img>
+    	<img src="./img/simple_tx_tracker_structure.png" width="800" height="400"></img>
 	
 </p>
 
 
 ## Trouble Shooting
 ### eth_getTransactionReceipt
-web3j는 tx가 block에 포함 되었는지를 receipt의 여부를 통해 확인한다. 이 과정은 결국 node(geth or parity)에 [eth_getTransactionReceipt rpc](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionreceipt)를 요청해서 받아낸다. 
+web3j는 tx가 block에 포함 되었는지를 receipt의 여부를 통해 확인한다. 이 과정은 결국 node(geth or parity)에 [eth_getTransactionReceipt](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionreceipt) rpc를 요청해서 받아낸다. 
 
 docs
 > Returns the receipt of a transaction by transaction hash.

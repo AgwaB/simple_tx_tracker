@@ -2,6 +2,7 @@ package com.simple.tracker.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Getter
@@ -13,10 +14,14 @@ public class InitConfig {
     private String ganacheUrl;
     @Value("${node.ganache.port}")
     private String ganachePort;
-    @Value("${node.ropsten.url}")
-    private String ropstenUrl;
-    @Value("${node.ropsten.key}")
-    private String ropstenKey;
+    @Value("${node.infura.url}")
+    private String infuraUrl;
+    @Value("${node.infura.key}")
+    private String infuraKey;
+    @Value("${node.parity.url}")
+    private String parityUrl;
+    @Value("${node.parity.port}")
+    private String parityPort;
     @Value("${etherscan.api.key}")
     private String etherscanKey;
     @Value("${tracker.address}")

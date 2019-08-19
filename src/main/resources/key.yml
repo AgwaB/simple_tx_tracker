@@ -1,7 +1,7 @@
-etherscan:
-  api:
-    key: XKSJ7APNM5F9PR5R4P5W84S6IXW95BW7MK
+#etherscan:
+#  api:
+#    key: XKSJ7APNM5F9PR5R4P5W84S6IXW95BW7MK
 
-node:
-  ropsten:
-    key: 4feb1e5949df453fa6326d4328fe5b80
+#node:
+#  ropsten:
+#    key: 4feb1e5949df453fa6326d4328fe5b80

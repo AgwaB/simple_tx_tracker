@@ -20,12 +20,20 @@ spring:
       path: /h2-console
 
 node:
-  mode: ropsten
-  ropsten:
-    url: https://ropsten.infura.io/v3/
+  mode: infura
+  parity:
+    url: http://45.32.21.50
+    port: 8545/
+  infura:
+    url: https://ropsten.infura.io/v3
+    key: 4feb1e5949df453fa6326d4328fe5b80
   ganache:
     url: http://127.0.0.1
     port: 8545
+
+etherscan:
+  api:
+    key: XKSJ7APNM5F9PR5R4P5W84S6IXW95BW7MK
 
 tracker:
   address: dE855e7bBd97b1aE3aBa872e62Cb4C555A709Fe9
@@ -35,4 +43,4 @@ tx:
   thread-pool: 24
 
 server:
-  port: 8081
+  port: 8080

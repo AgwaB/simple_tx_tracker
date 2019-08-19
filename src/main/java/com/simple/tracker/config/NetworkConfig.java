@@ -1,16 +1,14 @@
 package com.simple.tracker.config;
 
+import com.simple.tracker.app.parity.ParityService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
-import org.web3j.protocol.Web3j;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.http.HttpService;
 
@@ -25,12 +23,16 @@ public class NetworkConfig {
 
     @PostConstruct
     public void prepare() {
-        if(initConfig.getMode().equals("ropsten")) {
-            host = initConfig.getRopstenUrl() + initConfig.getRopstenKey();
+        if(initConfig.getMode().equals("parity")) {
+            host = parityBaseUrl();
+        }
+
+        if(initConfig.getMode().equals("infura")) {
+            host = infuraBaseUrl();
         }
 
         if(initConfig.getMode().equals("ganache")) {
-            host = initConfig.getGanacheUrl() + ":" + initConfig.getGanachePort();
+            host = ganacheBaseUrl();
         }
     }
 
@@ -45,5 +47,31 @@ public class NetworkConfig {
         return Admin.build(httpService);
     }
 
+    @Bean("parityBaseUrl")
+    public String parityBaseUrl() {
+        return initConfig.getParityUrl() + ":" + initConfig.getParityPort();
+    }
 
+    @Bean("infuraBaseUrl")
+    public String infuraBaseUrl() {
+        return initConfig.getInfuraUrl() + "/" + initConfig.getInfuraKey();
+    }
+
+    @Bean("ganacheBaseUrl")
+    public String ganacheBaseUrl() {
+        return initConfig.getGanacheUrl() + ":" + initConfig.getGanachePort();
+    }
+
+    @Bean
+    public RestTemplate getRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
+    }
+
+    @Bean(name = "parityHttpHeaders")
+    public HttpHeaders parityHttpHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-Type", "application/json");
+        return httpHeaders;
+    }
 }

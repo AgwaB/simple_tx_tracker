@@ -1,6 +1,7 @@
 package com.simple.tracker.workspace;
 
 import com.simple.tracker.app.UnconfirmedTx;
+import com.simple.tracker.app.parity.ParityService;
 import com.simple.tracker.app.service.TxService;
 import com.simple.tracker.app.util.Web3jUtil;
 import com.simple.tracker.app.value.TxLog;
@@ -14,25 +15,36 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 
 @Component
 public class UnconfirmedTxScheduler {
     private static final int BREAK_TIME = 15 * 1000;
-    @Autowired
-    @Qualifier("unconfirmedTxQueue")
+
     private BlockingQueue<UnconfirmedTx> unconfirmedTxQueue;
-    @Autowired
+    private ParityService parityService;
     private TxService txService;
+
+    public UnconfirmedTxScheduler(
+            @Qualifier("unconfirmedTxQueue") BlockingQueue<UnconfirmedTx> unconfirmedTxQueue,
+            ParityService parityService,
+            TxService txService
+    ) {
+        this.unconfirmedTxQueue = unconfirmedTxQueue;
+        this.parityService = parityService;
+        this.txService = txService;
+    }
 
     @Scheduled(fixedDelay = BREAK_TIME)
     public void run() {
+        Set<String> pendingTxsHash = parityService.getPendingTransactionsHash();
         for (UnconfirmedTx unconfirmedTx : unconfirmedTxQueue) {
             try {
                 if(txService.checkIsConfirmed(unconfirmedTx)) {
                     txService.changeTxStatus(
-                            unconfirmedTx.getTxId(),
+                            unconfirmedTx,
                             txService.getConfirmedStatus(unconfirmedTx.getTxId())
                     );
                     unconfirmedTxQueue.remove(unconfirmedTx);
@@ -40,22 +52,23 @@ public class UnconfirmedTxScheduler {
                 }
 
                 if(txService.checkCanceled(unconfirmedTx)) {
-                    txService.changeTxStatus(unconfirmedTx.getTxId(), TxStatus.SENT_CANCEL);
+                    txService.changeTxStatus(unconfirmedTx, TxStatus.SENT_CANCEL);
                     unconfirmedTxQueue.remove(unconfirmedTx);
                     continue;
                 }
 
-                if(txService.checkIsUnknown(unconfirmedTx, Collections.emptyList())) {
-                    txService.changeTxStatus(unconfirmedTx.getTxId(), TxStatus.SENT_UNKNOWN);
+                if(txService.checkIsUnknown(unconfirmedTx, pendingTxsHash)) {
+                    txService.changeTxStatus(unconfirmedTx, TxStatus.SENT_UNKNOWN);
                     continue;
                 }
 
-                if(txService.checkIsLost(unconfirmedTx, Collections.emptyList())) {
-                    txService.changeTxStatus(unconfirmedTx.getTxId(), TxStatus.LOST);
+                if(txService.checkIsLost(unconfirmedTx, pendingTxsHash)) {
+                    txService.changeTxStatus(unconfirmedTx, TxStatus.LOST);
                     continue;
                 }
 
-                txService.changeTxStatus(unconfirmedTx.getTxId(), TxStatus.PENDING);
+                txService.changeTxStatus(unconfirmedTx, TxStatus.PENDING);
+                unconfirmedTx.increadCheckedCnt();
 
                 /**
                  * check confirmed
@@ -64,12 +77,14 @@ public class UnconfirmedTxScheduler {
                  * check pending(it is in pending list)
                  */
             } catch (ExecutionException e) {
-                TxLog.error(e.getMessage(), "");
                 // get nonce
+                TxLog.error(e.getMessage());
             } catch (InterruptedException e) {
                 // get nonce
+                TxLog.error(e.getMessage());
             } catch (Exception e) {
                 // send receipt request
+                TxLog.error(e.getMessage());
             }
         }
     }

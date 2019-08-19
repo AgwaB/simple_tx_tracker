@@ -59,7 +59,7 @@ public class TxReceiptProcessor {
                             TxLog.error(exception.getMessage(), "send to pending transaction pool");
                             Transaction tx = txService.findByTxId(e.getTransactionHash().get());
                             unconfirmedTxQueue.add(
-                                    new UnconfirmedTx(tx.getTxId(), tx.getFrom(), tx.getNonce())
+                                    new UnconfirmedTx(tx.getTxId(), tx.getFrom(), tx.getNonce(), TxStatus.PENDING)
                             );
                             return;
                         } catch (Exception e) {
